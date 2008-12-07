@@ -24,8 +24,10 @@ impractical use you can think of :)
 * Read incoming messages
 
 * Performance is slow, expected for POC
-* No output yet
-* No documents
+
+== TODO:
+
+* Speed this baby up, gonna need some help here
 
 == SYNOPSIS:
 
