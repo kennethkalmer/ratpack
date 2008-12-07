@@ -20,19 +20,19 @@ post '/message' do
   to = params[:to]
   message = params[:message]
 
-  ratpack.message( to, message )
+  ratpack.message( to, message ).to_xml
 end
 
 post '/broadcast' do
   to = params['recipients[]']
   message = params[:message]
 
-  ratpack.broadcast( message, *to )
+  ratpack.broadcast( message, to ).to_xml
 end
 
 post '/pool' do
   to = params[:pool]
   message = params[:message]
 
-  ratpack.pool( to, message )
+  ratpack.pool( to, message ).to_xml
 end

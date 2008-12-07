@@ -11,7 +11,7 @@ module Ratpack
 
     def initialize( *members )
       @members = []
-      @members.concat( members )
+      @members.concat( members.to_a.compact.flatten )
 
       @strategy = :random
 
@@ -22,6 +22,7 @@ module Ratpack
     # methods on #Pool.
     def strategy=( new_strategy )
       raise ArgumentError, "Unknown strategy" unless self.respond_to?( "deliver_#{new_strategy}".to_sym )
+      @strategy = new_strategy
     end
 
     # Send the message using the set strategy
@@ -32,8 +33,15 @@ module Ratpack
     # Send a message to a random member in the pool
     def deliver_random( message )
       target = @members.rand
-      puts "Randomly picked from pool: #{target}"
       Application.connection.deliver( target, message )
+
+      Response.new( message, target )
+    end
+
+    def deliver_broadcast( message )
+      @members.each { |m| Application.connection.deliver( m, message ) }
+
+      Response.new( message, @members )
     end
 
     protected

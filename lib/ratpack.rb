@@ -8,3 +8,4 @@ require 'xmpp4r-simple'
 
 require 'ratpack/application'
 require 'ratpack/pool'
+require 'ratpack/response'

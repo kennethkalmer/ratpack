@@ -46,13 +46,15 @@ module Ratpack
     # Send a message to a specific Jabber ID
     def message( to, message )
       self.class.connection.deliver( to, message )
+
+      Response.new( message, to )
     end
 
     # Broadcast a message to all Jabber ID's
-    def broadcast( message, *recipients )
-      recipients.each do |r|
-        self.connection.deliver( r, message )
-      end
+    def broadcast( message, recipients )
+      temp_pool = Pool.new( recipients )
+      temp_pool.strategy = :broadcast
+      temp_pool.deliver( message )
     end
 
     # Broadcast a message to a single Jabber ID in the pool
@@ -61,7 +63,9 @@ module Ratpack
       unless target_pool.nil?
         target_pool.deliver( message )
       else
-        puts 'No matching pool'
+        not_found do
+          Response.new( message, [], 'Pool not found')
+        end
       end
     end
 
