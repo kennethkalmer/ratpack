@@ -1,0 +1,5 @@
+# Pools configuration file
+
+sample:
+  - kenneth@devbox
+  - ruote@devbox

@@ -1,6 +1,6 @@
 = ratpack
 
-* FIX (url)
+* http://github.com/kennethkalmer/ratpack
 
 == DESCRIPTION:
 
@@ -23,19 +23,33 @@ impractical use you can think of :)
 * Send messages synchronously to individual contacts, blocking for response
 * Read incoming messages
 
+* Performance is slow, expected for POC
+* No output yet
+* No documents
+
 == SYNOPSIS:
 
-  FIX (code sample of usage)
+  GET /
+  POST /message with to & message where to is valid JID
+  POST /broadcast with recipients[] & message where recipientsp[] valid JID's
+  POST /pool with pool & message where pool is in config/pools.yml
+
+Here are some examples with curl
+
+  $ curl -F to=kenneth@devbox -F message=test http://localhost:4567/message
+  $ curl -F recipients[]=kenneth@devbox -F recipients[]=kenneth@devbox -F message=test3 http://localhost:4567/broadcast
+  $ curl -F pool=sample -F message=test_pool http://localhost:4567/pool
 
 == REQUIREMENTS:
 
-* sintra
+* sinatra
 * xmpp4r-simple
-* daemons
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+  $ git clone git://github.com/kennethkalmer/ratpack.git
+  ... review config in bridge.rb ...
+  $ ruby bridge.rb
 
 == LICENSE:
 
