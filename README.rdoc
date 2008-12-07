@@ -1,0 +1,63 @@
+= ratpack
+
+* FIX (url)
+
+== DESCRIPTION:
+
+Ratpack is a small Sinatra-based HTTP to XMPP bridge, allowing you to send
+jabber messages in a RESTful fashion. Messages can be sent to a pool of contacts
+in broadcast or round-robin fashion, or individualy.
+
+I'm aware of BOSH[http://en.wikipedia.org/wiki/BOSH], but I'm not sure if this
+will compete against it since BOSH should be for publicly accesible resource
+that need to scale (It is can XEP by the way).
+
+Ratpack is meant to be used where XMPP forms part of the backend processing
+environments, like bots that perform rankings or crawl sites or whatever
+impractical use you can think of :)
+
+== FEATURES/PROBLEMS:
+
+* Send messages asynchronously to individual contacts
+* Send messages asynchronously to groups of contacts (broadcast & round-robin)
+* Send messages synchronously to individual contacts, blocking for response
+* Read incoming messages
+
+== SYNOPSIS:
+
+  FIX (code sample of usage)
+
+== REQUIREMENTS:
+
+* sintra
+* xmpp4r-simple
+* daemons
+
+== INSTALL:
+
+* FIX (sudo gem install, anything else)
+
+== LICENSE:
+
+(The MIT License)
+
+Copyright (c) 2008 Kenneth Kalmer
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
