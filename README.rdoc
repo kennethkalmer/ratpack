@@ -8,7 +8,7 @@ Ratpack is a small Sinatra-based HTTP to XMPP bridge, allowing you to send
 jabber messages in a RESTful fashion. Messages can be sent to a pool of contacts
 in broadcast or round-robin mode, or individually.
 
-I'm aware of BOSH:http://en.wikipedia.org/wiki/BOSH, but I'm not sure if this
+I'm aware of BOSH[http://en.wikipedia.org/wiki/BOSH], but I'm not sure if this
 will compete against it since BOSH should be for publicly accessible resource
 that need to scale (It is can XEP by the way).
 
