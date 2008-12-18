@@ -1,26 +1,22 @@
 module Ratpack
   class Application
     
-    # JabberID to use
-    @@jabber_id = nil
-    cattr_accessor :jabber_id
-
-    # Jabber password
-    @@password = nil
-    cattr_accessor :password
-
-    # Jabber resource
-    @@resource = 'ratpack'
-    cattr_accessor :resource
-
-    # Contacts that are always included in the participants roster
-    @@contacts = []
-    cattr_accessor :contacts
-
     # Jabber connection
-    @connection = nil
     attr_reader :connection
 
+    # JabberID to use
+    attr_reader :jabber_id
+
+    # Jabber password
+    attr_reader :password
+
+    # Jabber resource
+    attr_reader :resource
+
+    # Contacts that are always included in the participants roster
+    attr_accessor :contacts
+
+    # Our singleton
     @@instance = nil
 
     class << self
@@ -44,17 +40,21 @@ module Ratpack
 
     # Start our application
     def initialize( options = {} )
-      self.class.jabber_id = options.delete(:jabber_id) if options.has_key?(:jabber_id)
-      self.class.password  = options.delete(:password)  if options.has_key?(:password)
-      self.class.contacts  = options.delete(:contacts)  if options.has_key?(:contacts)
-      self.class.resource  = options.delete(:resource)  if options.has_key?(:resource)
+      @jabber_id = options.delete(:jabber_id)
+      @password  = options.delete(:password)
+      @contacts  = options.delete(:contacts)  || []
+      @resource  = options.delete(:resource)  || 'ratpack'
 
-      @message_queue = Queue.new
+      raise ArgumentError, "jabber_id and password required" if @jabber_id.nil? || @password.nil?
+
+      @fibers = NB::FiberPool.new(10)
     end
 
     # Send a message to a specific Jabber ID
     def message( to, message )
-      self.deliver( to, message )
+      @fibers.spawn do
+        self.deliver( to, message )
+      end
 
       Response.new( message, to )
     end
@@ -111,9 +111,9 @@ module Ratpack
     private
 
     def connect!
-      jid = self.class.jabber_id + '/' + self.class.resource
+      jid = self.jabber_id + '/' + self.resource
 
-      @connection = Jabber::Simple.new( jid, self.class.password, nil, "Ratpack waiting for instructions" )
+      @connection = Jabber::Simple.new( jid, self.password, nil, "Ratpack waiting for instructions" )
 
       self.connection.reconnect unless self.connection.connected?
     end
@@ -123,13 +123,13 @@ module Ratpack
       # Clean the roster
       self.connection.roster.items.each_pair do |jid, roster_item|
         jid = jid.strip.to_s
-        unless self.class.contacts.include?( jid )
+        unless self.contacts.include?( jid )
           self.connection.remove( jid )
         end
       end
 
       # Add missing contacts
-      self.class.contacts.each do |contact|
+      self.contacts.each do |contact|
         unless self.connection.subscribed_to?( contact )
           self.befriend_contact!( contact )
         end
@@ -137,8 +137,8 @@ module Ratpack
     end
 
     def setup_pools!
-      if File.exists?( RATPACK_ROOT + '/config/pools.yml' )
-        groups = YAML::load_file( RATPACK_ROOT + '/config/pools.yml' )
+      if File.exists?( RATPACK_BASE + '/config/pools.yml' )
+        groups = YAML::load_file( RATPACK_BASE + '/config/pools.yml' )
 
         @pools = groups.inject({}) do |memo, group|
           memo[ group.shift ] = Pool.new( self, *group.shift )

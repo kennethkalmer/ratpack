@@ -4,7 +4,7 @@ module Ratpack
 
     def initialize( message, recipients = [], error = nil )
       @message = message
-      @recipients = recipients.to_a.flatten.compact
+      @recipients = ( Array === recipients ? recipients.flatten : [recipients] )
       @error = error
     end
 

@@ -34,7 +34,7 @@ module Ratpack
 
     # Send a message to a random member in the pool
     def deliver_random( message )
-      target = @members.rand
+      target = @members[ rand(@members.size - 1) ]
       @application.deliver( target, message )
 
       Response.new( message, target )
