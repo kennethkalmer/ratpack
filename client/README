@@ -1,0 +1,2 @@
+Sample Ratpack client written with HTTParty. Simply copy 'ratpack_client.rb' into
+any project to enable sending jabber messages.
