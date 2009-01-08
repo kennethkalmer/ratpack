@@ -1,0 +1,6 @@
+# Stupidly simple ratpack configuration file
+
+jabber_id: ratpack@devbox
+password: secret
+contacts:
+  - kenneth@devbox

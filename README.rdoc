@@ -44,14 +44,14 @@ Here are some examples with curl
 
 == REQUIREMENTS:
 
-* sinatra
-* xmpp4r-simple
+* sinatra (0.3.3)
+* xmpp4r-simple (0.8.8)
 
 == INSTALL:
 
   $ git clone git://github.com/kennethkalmer/ratpack.git
-  ... review config in bridge.rb ...
-  $ ruby bridge.rb
+  ... review config in config/ratpack.yml ...
+  $ ruby ratpack-app
 
 == LICENSE:
 

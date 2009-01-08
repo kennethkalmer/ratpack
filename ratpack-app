@@ -5,12 +5,15 @@ require 'sinatra'
 use Rack::ShowExceptions
 
 configure do
+  require 'yaml'
+  config = YAML.load_file( File.dirname(__FILE__) + '/config/ratpack.yml' )
+  
   RATPACK_ROOT = File.dirname(__FILE__) unless defined?( RATPACK_ROOT )
   require 'lib/ratpack'
   Ratpack::Application.instance(
-    :jabber_id => 'ratpack@devbox',
-    :password => 'secret',
-    :contacts => ['kenneth@devbox']
+    :jabber_id => config["jabber_id"],
+    :password => config["password"],
+    :contacts => config["contacts"]
   )
   trap(:INT) do
     Ratpack::Application.instance.shutdown!
