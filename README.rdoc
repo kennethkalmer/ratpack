@@ -47,11 +47,16 @@ AMQP
   POST /xmpp/pool with pool & message where pool is in config/pools.yml
   POST /amqp/[queue] where queue is the name of the queue to send to and message is the message
 
-Here are some examples with curl
+Here are some examples with curl for sending XMPP messages
 
   $ curl -F to=kenneth@devbox -F message=test http://localhost:4567/xmpp/message
   $ curl -F recipients[]=kenneth@devbox -F recipients[]=kenneth@devbox -F message=test3 http://localhost:4567/xmpp/broadcast
   $ curl -F pool=sample -F message=test_pool http://localhost:4567/xmpp/pool
+
+Here is one example for sending AMQP messages
+
+  $ ruby amqp/consumer.rb
+  ... in another console ...
   $ curl -F message=test http://localhost:4567/amqp/queue
 
 == REQUIREMENTS:
