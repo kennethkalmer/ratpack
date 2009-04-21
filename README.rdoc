@@ -4,48 +4,61 @@
 
 == DESCRIPTION:
 
-Ratpack is a small Sinatra-based HTTP to XMPP bridge, allowing you to send
-jabber messages in a RESTful fashion. Messages can be sent to a pool of contacts
-in broadcast or round-robin mode, or individually.
+Ratpack is a small Sinatra-based HTTP to XMPP/AMQP bridge, allowing you to send
+messages in a RESTful fashion. XMPP messages can be sent to a pool of contacts
+in broadcast or round-robin mode, or individually. AMQP messages are sent into
+the queue of choice.
 
 I'm aware of BOSH[http://en.wikipedia.org/wiki/BOSH], but I'm not sure if this
 will compete against it since BOSH should be for publicly accessible resource
-that need to scale (It is can XEP by the way).
+that need to scale (It is an XEP by the way). For AMQP there a fuller 
+implementation called RestMS[http://www.restms.org].
 
-Ratpack is meant to be used where XMPP forms part of the backend processing
+Ratpack is meant to be used where XMPP/AMQP forms part of the backend processing
 environments, like bots that perform rankings or crawl sites or whatever
 impractical use you can think of :)
 
 == FEATURES/PROBLEMS:
 
+XMPP
+
 * Send messages asynchronously to individual contacts
 * Send messages asynchronously to groups of contacts (broadcast & round-robin)
 * Send messages synchronously to individual contacts, blocking for response
-* Read incoming messages
+* Read incoming messages [Eventually]
+
+AMQP
+
+* Send messages asynchronously to named queues
 
 * Performance is slow, expected for POC
 
 == TODO:
 
+* Switch to rack-mount
+* Implement loudmouth-ruby for XMPP
 * Speed this baby up, gonna need some help here
 
 == SYNOPSIS:
 
   GET /
-  POST /message with to & message where to is valid JID
-  POST /broadcast with recipients[] & message where recipientsp[] valid JID's
-  POST /pool with pool & message where pool is in config/pools.yml
+  POST /xmpp/message with to & message where to is valid JID
+  POST /xmpp/broadcast with recipients[] & message where recipientsp[] valid JID's
+  POST /xmpp/pool with pool & message where pool is in config/pools.yml
+  POST /amqp/[queue] where queue is the name of the queue to send to and message is the message
 
 Here are some examples with curl
 
-  $ curl -F to=kenneth@devbox -F message=test http://localhost:4567/message
-  $ curl -F recipients[]=kenneth@devbox -F recipients[]=kenneth@devbox -F message=test3 http://localhost:4567/broadcast
-  $ curl -F pool=sample -F message=test_pool http://localhost:4567/pool
+  $ curl -F to=kenneth@devbox -F message=test http://localhost:4567/xmpp/message
+  $ curl -F recipients[]=kenneth@devbox -F recipients[]=kenneth@devbox -F message=test3 http://localhost:4567/xmpp/broadcast
+  $ curl -F pool=sample -F message=test_pool http://localhost:4567/xmpp/pool
+  $ curl -F message=test http://localhost:4567/amqp/queue
 
 == REQUIREMENTS:
 
-* sinatra (0.3.3)
+* sinatra (0.9.1.1)
 * xmpp4r-simple (0.8.8)
+* amqp (0.6.0)
 
 == INSTALL:
 
@@ -57,7 +70,7 @@ Here are some examples with curl
 
 (The MIT License)
 
-Copyright (c) 2008 Kenneth Kalmer
+Copyright (c) 2009 Kenneth Kalmer
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

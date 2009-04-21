@@ -9,14 +9,12 @@ configure do
   config = YAML.load_file( File.dirname(__FILE__) + '/config/ratpack.yml' )
   
   RATPACK_ROOT = File.dirname(__FILE__) unless defined?( RATPACK_ROOT )
+  
   require 'lib/ratpack'
-  Ratpack::Application.instance(
-    :jabber_id => config["jabber_id"],
-    :password => config["password"],
-    :contacts => config["contacts"]
-  )
+  Ratpack::Application.run( config )
+
   trap(:INT) do
-    Ratpack::Application.instance.shutdown!
+    Ratpack::Application.shutdown!
   end
 end
 
@@ -24,23 +22,27 @@ get '/' do
   '<html><head><title>Talk!</title></head><body><h1>Talk!</h1></body></html>'
 end
 
-post '/message' do
+post '/xmpp/message' do
   to = params[:to]
   message = params[:message]
 
-  Ratpack::Application.instance.message( to, message ).to_xml
+  Ratpack::Application.xmpp.message( to, message ).to_xml
 end
 
-post '/broadcast' do
+post '/xmpp/broadcast' do
   to = params['recipients[]']
   message = params[:message]
 
-  Ratpack::Application.instance.broadcast( message, to ).to_xml
+  Ratpack::Application.xmpp.broadcast( message, to ).to_xml
 end
 
-post '/pool' do
+post '/xmpp/pool' do
   to = params[:pool]
   message = params[:message]
 
-  Ratpack::Application.instance.pool( to, message ).to_xml
+  Ratpack::Application.xmpp.pool( to, message ).to_xml
+end
+
+post '/amqp/:queue' do
+  
 end

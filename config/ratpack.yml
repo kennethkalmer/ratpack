@@ -1,6 +1,14 @@
 # Stupidly simple ratpack configuration file
 
-jabber_id: ratpack@devbox
-password: secret
-contacts:
-  - kenneth@devbox
+xmpp:
+  enabled: true
+  jabber_id: ratpack@devbox
+  password: secret
+  contacts:
+    - kenneth@devbox
+amqp:
+  enabled: true
+  host: localhost
+  username: ratpack
+  password: secret
+  vhost: /ratpack
