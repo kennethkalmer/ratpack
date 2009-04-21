@@ -44,5 +44,8 @@ post '/xmpp/pool' do
 end
 
 post '/amqp/:queue' do
-  
+  queue = params[:queue]
+  message = params[:message]
+
+  Ratpack::Application.amqp.publish( queue, message ).inspect
 end

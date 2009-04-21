@@ -56,6 +56,7 @@ Here are some examples with curl
 
 == REQUIREMENTS:
 
+* activesupport
 * sinatra (0.9.1.1)
 * xmpp4r-simple (0.8.8)
 * amqp (0.6.0)
