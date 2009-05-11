@@ -1,13 +1,13 @@
 module Ratpack
   class AMQP
-    
+
     # Thread for EM.run requirement of amqp
     @em_thread = nil
     attr_reader :em_thread
-    
+
     # AMQP connection
     @connection = nil
-    
+
     # Keep it singleton
     @@instance = nil
 
@@ -17,17 +17,17 @@ module Ratpack
         q = ::MQ.queue( queue )
         q.publish( message )
       end
-      
+
       def instance( *args )
         @instance ||= new( *args )
         @instance.startup!
         @instance
       end
-      
+
     end
 
     def initialize( options = {} )
-      @host = options['host']
+      @options = options
 
       @em_thread = Thread.new { EM.run }
     end
@@ -38,11 +38,11 @@ module Ratpack
 
     def startup!
       return self if @booted
-      
-      @connection = ::AMQP.connect
-      
+
+      @connection = ::AMQP.connect( @options )
+
       @booted = true
-      
+
       self
     end
 

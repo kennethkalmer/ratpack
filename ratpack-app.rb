@@ -1,5 +1,12 @@
 #!/usr/bin/env ruby
 require 'rubygems'
+
+begin
+  # Attempt to load github gem first
+  gem 'sinatra-sinatra'
+rescue Gem::LoadError
+end
+
 require 'sinatra'
 
 use Rack::ShowExceptions
@@ -7,11 +14,11 @@ use Rack::ShowExceptions
 configure do
   require 'yaml'
   config = YAML.load_file( File.dirname(__FILE__) + '/config/ratpack.yml' )
-  
+
   RATPACK_ROOT = File.dirname(__FILE__) unless defined?( RATPACK_ROOT )
-  
+
   require 'lib/ratpack'
-  Ratpack::Application.run( config )
+  Ratpack::Application.config = config
 
   trap(:INT) do
     Ratpack::Application.shutdown!
@@ -48,4 +55,12 @@ post '/amqp/:queue' do
   message = params[:message]
 
   Ratpack::Application.amqp.publish( queue, message ).inspect
+end
+
+post '/smtp' do
+  to = params[:to]
+  subject = params[:subject]
+  body = params[:body]
+
+  Ratpack::Application.smtp.send_message( to, subject, body ).inspect
 end

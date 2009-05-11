@@ -6,27 +6,37 @@ module Ratpack
 
     # AMQP instance
     @@amqp = nil
-    
+
+    # SMTP instance
+    @@smtp = nil
+
     class << self
-      
+
       # Spawn the backends
-      def run( config )
-        @xmpp = XMPP.instance( config["xmpp"] )
-        @amqp = AMQP.instance
+      def config=( config )
+        @@config = config
+        
+        #@@xmpp = XMPP.instance( config["xmpp"] )
+        #@@amqp = AMQP.instance( config["amqp"] )
+        #@@smtp = SMTP.instance( config["smtp"] )
       end
-      
+
       # Close down the backends
       def shutdown!
-        @xmpp.shutdown!
-        @amqp.shutdown!
+        @@xmpp.shutdown!
+        @@amqp.shutdown!
       end
 
       def xmpp
-        @xmpp
+        @@xmpp ||= XMPP.instance( @@config['xmpp'] )
       end
 
       def amqp
-        @amqp
+        @@amqp ||= AMQP.instance( @@config['amqp'] )
+      end
+
+      def smtp
+        @@smtp ||= SMTP.instance( @@config['smtp'] )
       end
     end
   end

@@ -4,19 +4,19 @@
 
 == DESCRIPTION:
 
-Ratpack is a small Sinatra-based HTTP to XMPP/AMQP bridge, allowing you to send
-messages in a RESTful fashion. XMPP messages can be sent to a pool of contacts
-in broadcast or round-robin mode, or individually. AMQP messages are sent into
-the queue of choice.
+Ratpack is a small Sinatra-based HTTP to XMPP/AMQP/SMTP bridge,
+allowing you to send messages in a RESTful fashion. XMPP messages can
+be sent to a pool of contacts in broadcast or round-robin mode, or
+individually. AMQP messages are sent into the queue of choice.
 
-I'm aware of BOSH[http://en.wikipedia.org/wiki/BOSH], but I'm not sure if this
-will compete against it since BOSH should be for publicly accessible resource
-that need to scale (It is an XEP by the way). For AMQP there a fuller 
-implementation called RestMS[http://www.restms.org].
+I'm aware of BOSH[http://en.wikipedia.org/wiki/BOSH], but I'm not sure
+if this will compete against it since BOSH should be for publicly
+accessible resource that need to scale (It is an XEP by the way). For
+AMQP there a fuller implementation called RestMS[http://www.restms.org].
 
-Ratpack is meant to be used where XMPP/AMQP forms part of the backend processing
-environments, like bots that perform rankings or crawl sites or whatever
-impractical use you can think of :)
+Ratpack is meant to be used where XMPP/AMQP/SMTP forms part of the
+backend processing environments, like bots that perform rankings or
+crawl sites or whatever impractical use you can think of :)
 
 == FEATURES/PROBLEMS:
 
@@ -31,6 +31,10 @@ AMQP
 
 * Send messages asynchronously to named queues
 
+SMTP
+
+* Send a message directly to a specified recipient
+
 * Performance is slow, expected for POC
 
 == TODO:
@@ -38,6 +42,9 @@ AMQP
 * Switch to rack-mount
 * Implement loudmouth-ruby for XMPP
 * Speed this baby up, gonna need some help here
+* Write tests
+* Authentication and rate limiting
+* Consolidate responses
 
 == SYNOPSIS:
 
@@ -46,6 +53,7 @@ AMQP
   POST /xmpp/broadcast with recipients[] & message where recipientsp[] valid JID's
   POST /xmpp/pool with pool & message where pool is in config/pools.yml
   POST /amqp/[queue] where queue is the name of the queue to send to and message is the message
+  POST /smtp with to, subject & body being the parameters
 
 Here are some examples with curl for sending XMPP messages
 
@@ -59,12 +67,19 @@ Here is one example for sending AMQP messages
   ... in another console ...
   $ curl -F message=test http://localhost:4567/amqp/queue
 
+And for sending emails
+
+  $ curl -F to=kenneth@devbox -F body=Test -F subject=ratpack http://localhost:4567/smtp
+
 == REQUIREMENTS:
 
 * activesupport
 * sinatra (0.9.1.1)
 * xmpp4r-simple (0.8.8)
 * amqp (0.6.0)
+
+Note: ratpack attempts to load the github sinatra gem first, and will
+silently fail, using the standard sinatra gem installed on your system
 
 == INSTALL:
 

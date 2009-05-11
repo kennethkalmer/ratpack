@@ -6,9 +6,17 @@ xmpp:
   password: secret
   contacts:
     - kenneth@devbox
+
+# These values are passed directly to AMQP#connect
 amqp:
   enabled: true
   host: localhost
   username: ratpack
   password: secret
   vhost: /ratpack
+
+smtp:
+  enabled: true
+  host: localhost
+  port: 25
+  from: ratpack@example.com
